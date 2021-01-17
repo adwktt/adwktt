@@ -45,21 +45,21 @@ if (typeof $request !== 'undefined') {
 } else {
 !(async() => {
 
-   if (now.getHours() <= 12){
+   if (now.getHours() <= 12){//通知时间
       $.msg($.name, '自動閱讀开始🎉🎉🎉')
    }else {
       $.log($.name, '当前不在执行时间段,将为您查询账户余额！')
    }
    if (now.getHours() == 0){
       await withDraw();
-   }else if (now.getHours() >= 7 && now.getHours() <12 ){
-   if (now.getHours() === 7 && now.getMinutes() < 30){
+   }else if (now.getHours() >= 7 && now.getHours() <12 ){//日常任务及普通任务执行时间7-11点
+   if (now.getHours() === 7 && now.getMinutes() < 30){//签到时间 7:30之前
       await signIn();
       await doubleId()
       await dailyTaskList();
     }
       await smVideoLimit()
-}else if(now.getHours() <= 6 || now.getHours() > 8 && now.getHours() <= 10){
+}else if(now.getHours() <= 6 || now.getHours() > 8 && now.getHours() <= 10){//广告视频执行时间 0-6点以及9-10点
 for (var k = 1; k <= 119; k++){
       await inspireAd()
      }
