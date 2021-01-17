@@ -4,7 +4,7 @@
 圈x
 [rewrite_local]
 #一刻视频
-https://api.yikeapp.com - script-request-body https://raw.githubusercontent.com/adwktt/adwktt/master/yk.js
+https://api.yikeapp.com url script-request-body https://raw.githubusercontent.com/adwktt/adwktt/master/yk.js
 
 [task_local]
 0,30 0-12 * * * https://raw.githubusercontent.com/adwktt/adwktt/master/yk.js, tag=一刻, 
