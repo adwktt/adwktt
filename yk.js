@@ -63,7 +63,7 @@ if (typeof $request !== 'undefined') {
    }
    if (now.getHours() == 0){
       await withDraw();
-   }else if (now.getHours() >= 7 && now.getHours() <12 ){//日常任务及普通任务执行时间7-11点
+   }if (now.getHours() >= 7 && now.getHours() <12 ){//日常任务及普通任务执行时间7-11点
    if (now.getHours() === 7 && now.getMinutes() < 30){//签到时间 7:30之前
       await signIn();
       await doubleId()
