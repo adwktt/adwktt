@@ -19,6 +19,13 @@ http-request https://api.yikeapp.com script-path= https://raw.githubusercontent.
 
 cron "0,30 0-12 * * *" script-path= https://raw.githubusercontent.com/adwktt/adwktt/master/yk.js, tag= 一刻
 
+surge
+
+一刻视频 = type=cron,cronexp="0,30 0-12 * * *",wake-system=1,script-path=https://raw.githubusercontent.com/adwktt/adwktt/master/yk.js,script-update-interval=0
+一刻视频 = type=http-request,pattern=https://api.yikeapp.com,requires-body=1,max-size=0,script-path=https://raw.githubusercontent.com/adwktt/adwktt/master/yk.js,script-update-interval=0
+
+
+
 hostname = api.yikeapp.com,
 
 */
