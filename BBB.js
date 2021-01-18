@@ -19,11 +19,11 @@ loon
 [Script]
 http-request https://bububao.duoshoutuan.com/user/profile script-path= https://raw.githubusercontent.com/adwktt/adwktt/master/BBB.js, timeout=10, tag= 步步宝
 
-cron "0,30 0-12 * * *" script-path= https://raw.githubusercontent.com/adwktt/adwktt/master/yk.js, tag= 步步宝
+cron "0,30 * * * *" script-path= https://raw.githubusercontent.com/adwktt/adwktt/master/yk.js, tag= 步步宝
 
 surge
 
-步步宝 = type=cron,cronexp="0,30 0-12 * * *",wake-system=1,script-path=https://raw.githubusercontent.com/adwktt/adwktt/master/yk.js,script-update-interval=0
+步步宝 = type=cron,cronexp="0,30 * * * *",wake-system=1,script-path=https://raw.githubusercontent.com/adwktt/adwktt/master/yk.js,script-update-interval=0
 步步宝 = type=http-request,pattern=https://bububao.duoshoutuan.com/user/profile,requires-body=0,max-size=0,script-path=https://raw.githubusercontent.com/adwktt/adwktt/master/BBB.js,script-update-interval=0
 
 
