@@ -66,7 +66,6 @@ $.msg($.name,"開始🎉🎉🎉")
       await checkCode()
 
       //await checkHomeJin()
-
       //await checkH5Id()
       //await homeJin()
       //await getNewsId()
