@@ -60,15 +60,16 @@ if(CookieVal)$.setdata(CookieVal,'bbb_ck')
 
 $.msg($.name,"開始🎉🎉🎉")
 
-      await checkCode()
-      await userInfo()
-      await showmsg()
+      //await checkCode()
+      //await userInfo()
+
+      await checkHomeJin()
 
       //await checkH5Id()
       //await homeJin()
       //await getNewsId()
       //await h5Done()
-
+      await showmsg()
 
 })()
     .catch((e) => $.logErr(e))
@@ -120,6 +121,7 @@ return new Promise((resolve, reject) => {
     headers: JSON.parse(CookieVal),
 }
    $.post(checkhomejin,async(error, response, data) =>{
+$.log('\n查詢HomeJin:'+data+'\n')
      const checkhomejb = JSON.parse(data)
      if(checkhomejb.right_st == 0){
           await homeJin()
@@ -140,6 +142,7 @@ return new Promise((resolve, reject) => {
     headers: JSON.parse(CookieVal),
 }
    $.post(checkhomeredbag,async(error, response, data) =>{
+$.log('\n查詢HomeRedbag:'+data+'\n')
      const checkhomerb = JSON.parse(data)
      if(checkhomerb.hb_st == 0){
           await checkRedBagId()
@@ -159,6 +162,7 @@ return new Promise((resolve, reject) => {
     headers: JSON.parse(CookieVal),
 }
    $.post(checkhomegold,async(error, response, data) =>{
+$.log('\n查詢HomeGold:'+data+'\n')
      const checkhomegd = JSON.parse(data)
      if(checkhomegd.jindan_show == 0){
           await checkGoldEggId()
@@ -181,9 +185,10 @@ return new Promise((resolve, reject) => {
    $.post(homejin,async(error, response, data) =>{
      const homejb = JSON.parse(data)
      if(homejb.code == 1){
+$.log('\nhomeJin:'+data+'\n')
           $.log('\n'+homejb.msg+'\n金幣+ '+homejb.jinbi+'\n')
          homeJinStr = homejb.nonce_str
-          $.log('\n'+homeJinStr+'\n')
+          //$.log('\n'+homeJinStr+'\n')
           await $.wait(30000)
           await homeJinCallBack()
     }else{
@@ -206,7 +211,7 @@ return new Promise((resolve, reject) => {
 }
    $.post(homejincallback,async(error, response, data) =>{
      const hmjcallback = JSON.parse(data)
-//$.log('\nhomeJinCallBack:'+data+'\n')
+$.log('\nhomeJinCallBack:'+data+'\n')
       if(hmjcallback.code == 1) {
           $.log('\n首頁視頻翻倍成功\n')
           await checkHomeRedbag()
@@ -227,10 +232,11 @@ return new Promise((resolve, reject) => {
     body: `mini_pos=0&c_type=2&`,
 }
    $.post(checkredbagid,async(error, response, data) =>{
+$.log('\n查詢RedBagId:'+data+'\n')
      const code = JSON.parse(data)
       if(code.code == 1) {
       redBagStr = code.nonce_str
-          $.log('\n'+redBagStr+'\n')
+         // $.log('\n'+redBagStr+'\n')
           await $.wait(30000)
           await redBagCallback()
            }
@@ -249,7 +255,7 @@ return new Promise((resolve, reject) => {
 }
    $.post(redbagcallback,async(error, response, data) =>{
      const redbag = JSON.parse(data)
-//$.log('\nredBagCallback:'+data+'\n')
+$.log('\nredBagCallback:'+data+'\n')
       if(redbag.code == 1) {
           $.log('\n首頁紅包領取成功\n')
           await checkHomeGold()
@@ -270,12 +276,13 @@ return new Promise((resolve, reject) => {
     headers: JSON.parse(CookieVal),
 }
    $.post(checkgoldeggid,async(error, response, data) =>{
+$.log('\n查詢GoldEggId:'+data+'\n')
      const goldegg = JSON.parse(data)
       if(goldegg.code == 1) {
       goldEggStr = goldegg.nonce_str
-          $.log('\n'+goldEggStr+'\n')
+         // $.log('\n'+goldEggStr+'\n')
       goldEggId = goldegg.taskid
-          $.log('\n'+goldEggId+'\n')
+         // $.log('\n'+goldEggId+'\n')
           await goldEggDone()
            }
           resolve()
@@ -292,6 +299,7 @@ return new Promise((resolve, reject) => {
     body: `taskid=${goldEggId}&clicktime=${timestamp}&donetime=${timestamp}+100&nonce_str=${goldEggStr}&`
 }
    $.post(goldeggdone,async(error, response, data) =>{
+$.log('\ngoldEggDone:'+data+'\n')
      const goldegg2 = JSON.parse(data)
       if(goldegg2.code == 1) {
           $.log('\n'+goldegg2.msg+'\n金幣+ '+goldegg2.jinbi+'\n')
@@ -315,7 +323,7 @@ return new Promise((resolve, reject) => {
 }
    $.post(goldeggcallback,async(error, response, data) =>{
      const goldeggback = JSON.parse(data)
-//$.log('\ngoldeggback:'+data+'\n')
+$.log('\n金蛋callback:'+data+'\n')
       if(goldeggback.code == 1) {
           $.log('\n金蛋翻倍成功\n')
           await checkHomeJin()
