@@ -121,9 +121,51 @@ return new Promise((resolve, reject) => {
 }
    $.post(checkhomejin,async(error, response, data) =>{
      const checkhomejb = JSON.parse(data)
-     if(checkhomejb.right_text.indexOf('qqq') == -1){
+     if(checkhomejb.right_st == 0){
           await homeJin()
-           }
+         }else if(checkhomejb.right_st == 1){
+          await checkHomeGold()
+         }
+        
+          resolve()
+    })
+   })
+  } 
+
+function checkHomeRedbag() {
+return new Promise((resolve, reject) => {
+  let timestamp=new Date().getTime();
+  let checkhomeredbag ={
+    url: 'https://bububao.duoshoutuan.com/user/home',
+    headers: JSON.parse(CookieVal),
+}
+   $.post(checkhomeredbag,async(error, response, data) =>{
+     const checkhomerb = JSON.parse(data)
+     if(checkhomerb.hb_st == 0){
+          await checkRedBagId()
+         }else{
+          await checkHomeJin()
+         }
+          resolve()
+    })
+   })
+  } 
+
+function checkHomeGold() {
+return new Promise((resolve, reject) => {
+  let timestamp=new Date().getTime();
+  let checkhomegold ={
+    url: 'https://bububao.duoshoutuan.com/user/home',
+    headers: JSON.parse(CookieVal),
+}
+   $.post(checkhomegold,async(error, response, data) =>{
+     const checkhomegd = JSON.parse(data)
+     if(checkhomegd.jindan_show == 0){
+          await checkGoldEggId()
+         }else{
+          await checkHomeJin()
+         }
+        
           resolve()
     })
    })
@@ -152,6 +194,8 @@ return new Promise((resolve, reject) => {
    })
   } 
 
+
+
 function homeJinCallBack() {
 return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
@@ -165,8 +209,7 @@ return new Promise((resolve, reject) => {
 //$.log('\nhomeJinCallBack:'+data+'\n')
       if(hmjcallback.code == 1) {
           $.log('\n首頁視頻翻倍成功\n')
-          await $.wait(70000)
-          await homeJin()
+          await checkHomeRedbag()
            }else{
           $.log('\n'+hmjcallback.msg+'\n')
            }
@@ -174,57 +217,6 @@ return new Promise((resolve, reject) => {
     })
    })
   } 
-
-function getNewsId() {
-return new Promise((resolve, reject) => {
-  let timestamp=new Date().getTime();
-  let getnewsid ={
-    url: 'https://bububao.duoshoutuan.com/user/news',
-    headers: JSON.parse(CookieVal),
-    body: `type_class=1&`
-}
-   $.post(getnewsid,async(error, response, data) =>{
-     const newsid = JSON.parse(data)
-//$.log('\ngetNewsId:'+data+'\n')
-     if(newsid.code == 1){
-       if(newsid.is_first == 1)
-         newsStr = newsid.nonce_str
-          $.log('\n'+newsStr+'\n')
-       if(newsid.is_max == 0){
-          await $.wait(15000)
-          await autoRead()
-          }else{
-          await luckyClick()
-         }}else{
-          $.log('\n'+newsid.msg+'\n')
-           }
-          resolve()
-    })
-   })
-  } 
-
-function autoRead() {
-return new Promise((resolve, reject) => {
-  let timestamp=new Date().getTime();
-  let autoread ={
-    url: 'https://bububao.duoshoutuan.com/user/donenews',
-    headers: JSON.parse(CookieVal),
-    body: `nonce_str=${newsStr}& `,
-}
-   $.post(autoread,async(error, response, data) =>{
-     const read = JSON.parse(data)
-//$.log('\n autoread:'+data+'\n')
-      if(read.code == 1) {
-          $.log('\n金幣+ '+read.jinbi+'💰\n')
-            await getNewsId()
-          }else{
-          $.log('\n'+data+'\n')
-           }
-          resolve()
-    })
-   })
-  } 
-
 
 function checkRedBagId() {
 return new Promise((resolve, reject) => {
@@ -260,10 +252,10 @@ return new Promise((resolve, reject) => {
 //$.log('\nredBagCallback:'+data+'\n')
       if(redbag.code == 1) {
           $.log('\n首頁紅包領取成功\n')
-          await checkGoldEggId()
+          await checkHomeGold()
            }else{
           $.log('\n'+redbag.msg+'\n')
-          await checkGoldEggId()
+          await checkHomeGold()
            }
           resolve()
     })
@@ -404,6 +396,58 @@ return new Promise((resolve, reject) => {
     })
    })
   } 
+
+function getNewsId() {
+return new Promise((resolve, reject) => {
+  let timestamp=new Date().getTime();
+  let getnewsid ={
+    url: 'https://bububao.duoshoutuan.com/user/news',
+    headers: JSON.parse(CookieVal),
+    body: `type_class=1&`
+}
+   $.post(getnewsid,async(error, response, data) =>{
+     const newsid = JSON.parse(data)
+//$.log('\ngetNewsId:'+data+'\n')
+     if(newsid.code == 1){
+       if(newsid.is_first == 1)
+         newsStr = newsid.nonce_str
+          $.log('\n'+newsStr+'\n')
+       if(newsid.is_max == 0){
+          await $.wait(15000)
+          await autoRead()
+          }else{
+          await luckyClick()
+         }}else{
+          $.log('\n'+newsid.msg+'\n')
+           }
+          resolve()
+    })
+   })
+  } 
+
+function autoRead() {
+return new Promise((resolve, reject) => {
+  let timestamp=new Date().getTime();
+  let autoread ={
+    url: 'https://bububao.duoshoutuan.com/user/donenews',
+    headers: JSON.parse(CookieVal),
+    body: `nonce_str=${newsStr}& `,
+}
+   $.post(autoread,async(error, response, data) =>{
+     const read = JSON.parse(data)
+//$.log('\n autoread:'+data+'\n')
+      if(read.code == 1) {
+          $.log('\n金幣+ '+read.jinbi+'💰\n')
+            await getNewsId()
+          }else{
+          $.log('\n'+data+'\n')
+           }
+          resolve()
+    })
+   })
+  } 
+
+
 
 function luckyClick() {
 return new Promise((resolve, reject) => {
