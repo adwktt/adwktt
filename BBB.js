@@ -446,7 +446,7 @@ return new Promise((resolve, reject) => {
      const read = JSON.parse(data)
 //$.log('\n autoread:'+data+'\n')
       if(read.code == 1) {
-          $.log('\n金幣+ '+read.jinbi+'💰\n')
+          $.log('\n閱讀金幣+ '+read.jinbi+'💰\n')
             await getNewsId()
           }else{
           $.log('\n'+data+'\n')
@@ -469,7 +469,7 @@ return new Promise((resolve, reject) => {
      const lucky = JSON.parse(data)
 //$.log('\nlockyclick:'+data+'\n')
       if(lucky.code == 1) {
-          $.log('\n'+lucky.msg+'\n金幣+ '+lucky.jinbi+'\n')
+          $.log('\n'+lucky.msg+'\n轉盤金幣+ '+lucky.jinbi+'\n')
          luckyStr = lucky.nonce_str
           $.log('\n'+luckyStr+'\n')
       if(lucky.jinbi != 0) {
@@ -523,7 +523,7 @@ return new Promise((resolve, reject) => {
      const boxlucky = JSON.parse(data)
 //$.log('\nlockybox:'+data+'\n')
       if(boxlucky.code == 1) {
-          $.log('\n'+boxlucky.msg+'\n金幣+ '+boxlucky.jinbi+'\n')
+          $.log('\n'+boxlucky.msg+'\n寶箱金幣+ '+boxlucky.jinbi+'\n')
          luckyBoxStr = boxlucky.nonce_str
           $.log('\n'+luckyBoxStr+'\n')
           await $.wait(5000)
@@ -549,7 +549,7 @@ return new Promise((resolve, reject) => {
      const boxcallback = JSON.parse(data)
 $.log('\nboxcallback:'+data+'\n')
       if(boxcallback.code == 1) {
-          $.log('\n轉盤翻倍成功\n')
+          $.log('\n寶箱翻倍成功\n')
           await $.wait(1000)
           await luckyBox()
            }else{
@@ -646,7 +646,7 @@ return new Promise((resolve, reject) => {
      const answer = JSON.parse(data)
 //$.log('\nanswerque:'+data+'\n')
       if(answer.code == 1) {
-          $.log('\n'+answer.msg+'\n金幣+ '+answer.jinbi+'\n')
+          $.log('\n'+answer.msg+'\n答題金幣+ '+answer.jinbi+'\n')
          answerStr = answer.nonce_str
           $.log('\n'+answerStr+'\n')
           await $.wait(5000)
