@@ -184,6 +184,7 @@ function videoTask() {
      if(video.code == 200){
      $.log('\n视频: '+ video.data.TopContent)
          await $.wait(32000)
+         await videoLimit()
        } else {
         $.log('\n视频'+data)
          await $.wait(32000)
