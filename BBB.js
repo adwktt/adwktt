@@ -350,8 +350,6 @@ return new Promise((resolve, reject) => {
       nonce_str = code.nonce_str
           $.log('\n'+nonce_str+'\n')
           await helpClick()
-           }else{
-          await getNewsId()
            }
           resolve()
     })
@@ -376,11 +374,13 @@ return new Promise((resolve, reject) => {
           await callBack()
            }else{
           $.log('\n'+help.msg+'\n')
+          await getNewsId()
            }
           resolve()
     })
    })
   } 
+
 
 
 function callBack() {
