@@ -60,10 +60,12 @@ if(CookieVal)$.setdata(CookieVal,'bbb_ck')
 
 $.msg($.name,"開始🎉🎉🎉")
 
-      //await checkCode()
-      //await userInfo()
 
-      await checkHomeJin()
+
+      await userInfo()
+      await checkCode()
+
+      //await checkHomeJin()
 
       //await checkH5Id()
       //await homeJin()
@@ -652,7 +654,7 @@ return new Promise((resolve, reject) => {
           await answerQueCallBack()
          }else{
           $.log('\n'+answer.msg+'\n')
-          await checkRedBagId()
+          await checkHomeJin()
          }
           resolve()
     })
