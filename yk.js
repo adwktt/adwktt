@@ -63,14 +63,16 @@ if (typeof $request !== 'undefined') {
    }
    if (now.getHours() == 0){
       await withDraw();
-   }if (now.getHours() >= 7 && now.getHours() <12 ){//日常任务及普通任务执行时间7-11点
+   }if (now.getHours() >= 7 && now.getHours() <=10 ){//日常任务及普通任务执行时间7-11点
    if (now.getHours() === 7 && now.getMinutes() < 30){//签到时间 7:30之前
       await signIn();
       await doubleId()
       await dailyTaskList();
-    }
       await smVideoLimit()
-}else if(now.getHours() <= 6 || now.getHours() > 10 && now.getHours() <= 12){//广告视频执行时间 0-6点以及10-12点
+    }else{
+      await smVideoLimit()
+    }
+}else if(now.getHours() <= 6 || now.getHours() >= 10 && now.getHours() <= 12){//广告视频执行时间 0-6点以及10-12点
 for (var k = 1; k <= 119; k++){
       await inspireAd()
      }
