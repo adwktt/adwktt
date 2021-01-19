@@ -62,6 +62,7 @@ $.msg($.name,"開始🎉🎉🎉")
       await watchTaskStatus()
       await checkCode()
       await getQuestionId()
+      await checkHomeJin()
       await showmsg()
 
 })()
@@ -1067,7 +1068,6 @@ $.log('\n🔔開始答題\n')
           await answerQueCallBack()
          }else{
           $.log('\n⚠️答題失敗: '+answer.msg+'\n')
-          await checkHomeJin()
          }
           resolve()
     })
