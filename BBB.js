@@ -61,6 +61,7 @@ $.msg($.name,"開始🎉🎉🎉")
       await clickTaskStatus()
       await watchTaskStatus()
       await checkCode()
+      await getNewsId()
       await getQuestionId()
       await checkHomeJin()
       await showmsg()
@@ -517,12 +518,19 @@ return new Promise((resolve, reject) => {
     headers: JSON.parse(CookieVal),
 }
    $.post(checkhomejin,async(error, response, data) =>{
-$.log('\n🔔開始查詢首頁金幣狀態\n')
      const checkhomejb = JSON.parse(data)
      if(checkhomejb.right_st == 0){
+$.log('\n🔔開始查詢首頁金幣狀態\n')
           await homeJin()
-         }else if(checkhomejb.right_st == 1){
-          await checkHomeGold()
+         }else if(checkhomejb.jindan_show == 0){
+$.log('\n🔔開始查詢首頁金蛋狀態\n')
+$.log(typeof checkhomejb.jindan_djs)
+          await $.wait(checkhomejb.jindan_djs)
+          await checkGoldEggId()
+         }else if(checkhomejb.hb_st == 0){
+$.log('\n🔔開始查詢首頁紅包狀態\n')
+          await $.wait(checkhomejb.hb_time*1000)
+          await checkRedBagId()
          }else{
 $.log('\n🔔首頁金幣狀態:'+checkhomejb.right_text+'\n🔔首頁紅包狀態:'+checkhomejb.hb_text+'\n🔔首頁金蛋狀態:'+checkhomejb.jindan_text+'\n')
          }
@@ -617,7 +625,7 @@ return new Promise((resolve, reject) => {
 $.log('\n🔔開始翻倍首頁金幣\n')
       if(hmjcallback.code == 1) {
           $.log('\n🎉首頁金幣翻倍成功\n')
-          await checkHomeRedbag()
+          await checkHomeJin()
            }else{
           $.log('\n🔔首頁金幣翻倍失敗'+hmjcallback.msg+'\n')
            }
@@ -661,10 +669,10 @@ return new Promise((resolve, reject) => {
 $.log('\n🔔開始領取首頁紅包\n')
       if(redbag.code == 1) {
           $.log('\n🎉首頁紅包領取成功\n')
-          await checkHomeGold()
+          await checkHomeJin()
            }else{
           $.log('\n⚠️首頁紅包領取失敗:'+redbag.msg+'\n')
-          await checkHomeGold()
+          await checkHomeJin()
            }
           resolve()
     })
@@ -680,14 +688,18 @@ return new Promise((resolve, reject) => {
 }
    $.post(checkgoldeggid,async(error, response, data) =>{
 $.log('\n🔔開始查詢首頁金蛋ID\n')
-     const goldegg = JSON.parse(data)
-      if(goldegg.code == 1) {
+     const goldeggid = JSON.parse(data)
+      if(goldeggid.code == 1) {
+$.log('\n🔔開始查詢首頁金蛋ID\n')
       goldEggStr = goldegg.nonce_str
          // $.log('\n'+goldEggStr+'\n')
       goldEggId = goldegg.taskid
          // $.log('\n'+goldEggId+'\n')
           await goldEggDone()
-           }
+           }else{
+          $.log('\n⚠️首頁金蛋失敗:'+goldeggid.msg+'\n')
+          await checkHomeJin()
+        }
           resolve()
     })
    })
@@ -699,10 +711,10 @@ return new Promise((resolve, reject) => {
   let goldeggdone ={
     url: `https://bububao.duoshoutuan.com/user/jindan_done`,
     headers: JSON.parse(CookieVal),
-    body: `taskid=${goldEggId}&clicktime=${timestamp}&donetime=${timestamp}+100&nonce_str=${goldEggStr}&`
+    body: `taskid=${goldEggId}&clicktime=${timestamp}&donetime=${timestamp}+1000&nonce_str=${goldEggStr}&`
 }
    $.post(goldeggdone,async(error, response, data) =>{
-$.log('\n🔔開始領取首頁金蛋\n')
+$.log('\n🔔開始領取首頁金蛋獎勵\n')
      const goldegg2 = JSON.parse(data)
       if(goldegg2.code == 1) {
           $.log('\n🎉首頁金蛋:'+goldegg2.msg+'\n金幣+ '+goldegg2.jinbi+'\n')
@@ -739,6 +751,28 @@ $.log('\n🔔開始翻倍首頁金蛋\n')
    })
   } 
 
+function helpStatus() {
+return new Promise((resolve, reject) => {
+  let timestamp=new Date().getTime();
+  let helpstatus ={
+    url: `https://bububao.duoshoutuan.com/user/help_index`,
+    headers: JSON.parse(CookieVal),
+}
+   $.post(helpstatus,async(error, response, data) =>{
+     const help = JSON.parse(data)
+$.log('\n🔔開始查詢助力視頻狀態\n')
+      if(help.btn_st != 1) {
+$.log('\n🔔查詢助力視頻狀態成功, 1s後獲取助力視頻ID\n')
+          await checkCode()
+           }else{
+$.log('\n🔔今日助力已上限,請明天再試!\n')
+           }
+          resolve()
+    })
+   })
+  } 
+
+
 function checkCode() {
 return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
@@ -771,14 +805,13 @@ return new Promise((resolve, reject) => {
 }
    $.post(helpclick,async(error, response, data) =>{
      const help = JSON.parse(data)
-$.log('\n🔔開始觀看助力視頻, 30s後領取助力視頻獎勵\n')
       if(help.code == 1) {
-          await $.wait(30000)
+$.log('\n🔔開始觀看助力視頻, 60s後領取助力視頻獎勵\n')
+          await $.wait(60000)
           $.log('\n🎉觀看助力視頻成功, 1s後領取金幣+ '+help.jinbi+'\n')
           await callBack()
            }else{
           $.log('\n⚠️觀看助力視頻失敗: '+help.msg+'\n')
-          await getNewsId()
            }
           resolve()
     })
@@ -799,9 +832,9 @@ return new Promise((resolve, reject) => {
      const back = JSON.parse(data)
 $.log('\n🔔開始領取助力視頻獎勵\n')
       if(back.code == 1) {
-          $.log('\n🎉領取助力視頻獎勵成功,1s後查詢下一次助力視頻ID\n')
+          $.log('\n🎉領取助力視頻獎勵成功,1s後查詢下一次助力視頻狀態\n')
           await $.wait(1000)
-          await checkCode()
+          await helpStatus()
            }else{
           $.log('\n⚠️助力視頻獎勵失敗:'+back.msg+'\n')
            }
