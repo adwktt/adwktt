@@ -531,6 +531,9 @@ $.log(typeof checkhomejb.jindan_djs)
 $.log('\n🔔開始查詢首頁紅包狀態\n')
           await $.wait(checkhomejb.hb_time*1000)
           await checkRedBagId()
+         }else if(checkhomejb.hb_time < 0){
+$.log('\n🔔開始查詢首頁紅包狀態\n')
+          await checkRedBagId()
          }else{
 $.log('\n🔔首頁金幣狀態:'+checkhomejb.right_text+'\n🔔首頁紅包狀態:'+checkhomejb.hb_text+'\n🔔首頁金蛋狀態:'+checkhomejb.jindan_text+'\n')
          }
