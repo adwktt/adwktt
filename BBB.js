@@ -421,6 +421,13 @@ return new Promise((resolve, reject) => {
 $.log('\n🔔開始領取每日觀看獎勵\n')
       if(dailywatch.code == 1) {
           $.log('\n🎉每日觀看獎勵領取成功,5m(300s)後查詢下一次廣告\n')
+          for(let i=1;i<=60;i++){
+              (function(){
+                  setTimeout(() => {
+                    $.log('\n🎉'+(60-i)*5+'s後查詢下一次廣告\n')
+                  }, 5000*i);
+              })()
+          }
           await $.wait(300000)
           await watchTaskStatus()
            }else{
@@ -766,8 +773,8 @@ return new Promise((resolve, reject) => {
      const help = JSON.parse(data)
 $.log('\n🔔開始觀看助力視頻, 30s後領取助力視頻獎勵\n')
       if(help.code == 1) {
-          $.log('\n🎉觀看助力視頻成功, 1s後領取金幣+ '+help.jinbi+'\n')
           await $.wait(30000)
+          $.log('\n🎉觀看助力視頻成功, 1s後領取金幣+ '+help.jinbi+'\n')
           await callBack()
            }else{
           $.log('\n⚠️觀看助力視頻失敗: '+help.msg+'\n')
