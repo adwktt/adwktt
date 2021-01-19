@@ -70,6 +70,7 @@ if (typeof $request !== 'undefined') {
       await dailyTaskList();
       await smVideoLimit()
     }else{
+      await dailyTaskList();
       await smVideoLimit()
     }
 }else if(now.getHours() <= 6 || now.getHours() >= 10 && now.getHours() <= 12){//广告视频执行时间 0-6点以及10-12点
