@@ -527,7 +527,7 @@ $.log('\n🔔開始查詢首頁金蛋狀態\n')
 $.log(typeof checkhomejb.jindan_djs)
           await $.wait(checkhomejb.jindan_djs)
           await checkGoldEggId()
-         }else if(checkhomejb.hb_st == 0){
+         }else if(checkhomejb.hb_time >= 0){
 $.log('\n🔔開始查詢首頁紅包狀態\n')
           await $.wait(checkhomejb.hb_time*1000)
           await checkRedBagId()
