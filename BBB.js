@@ -866,6 +866,8 @@ $.log('\n🔔開始查詢抽獎次數\n')
           //$.log(box)
           if (box != 2)
           await luckyBox()
+          if (box == 2)
+          $.log('\n⚠️寶箱已開啟\n')
          }
        }
           resolve()
