@@ -56,6 +56,7 @@ $.msg($.name,"開始🎉🎉🎉")
 
       await userInfo()
       await signIn()
+      await zaoWanDkInfo()
       await sleepStatus()
       await checkWaterNum()
       await clickTaskStatus()
@@ -152,6 +153,72 @@ $.log('\n🔔開始領取每日觀看獎勵\n')
     })
    })
   } 
+
+function zaoWanDkInfo() {
+return new Promise((resolve, reject) => {
+  let timestamp=new Date().getTime();
+  let zaowandkinfo ={
+    url: `https://bububao.duoshoutuan.com/mini/dk_info`,
+    headers: JSON.parse(CookieVal),
+}
+   $.post(zaowandkinfo,async(error, response, data) =>{
+     const zwdkinfo = JSON.parse(data)
+      if(zwdkinfo.code == 1) {
+      nowTime = zwdkinfo.now_time
+      title1 = zwdkinfo.title1
+      title2 = zwdkinfo.title2
+          await zaoWanDk()
+           }
+          resolve()
+    })
+   })
+  } 
+
+
+
+function zaoWanDk() {
+return new Promise((resolve, reject) => {
+  let timestamp=new Date().getTime();
+  let zaowandk ={
+    url: `https://bububao.duoshoutuan.com/user/chuansj`,
+    headers: JSON.parse(CookieVal),
+    body: `mini_pos=3&c_type=1&`,
+}
+   $.post(zaowandk,async(error, response, data) =>{
+     const zwdk = JSON.parse(data)
+      if(zwdk.code == 1) {
+      zwdkStr = zwdk.nonce_str
+          await $.wait(30000)
+          await dkClick()
+           }
+          resolve()
+    })
+   })
+  } 
+
+function dkClick() {
+return new Promise((resolve, reject) => {
+  let timestamp=new Date().getTime();
+  let dkclick ={
+    url: `https://bububao.duoshoutuan.com/mini/dk_click`,
+    headers: JSON.parse(CookieVal),
+    body: `now_time=${nowTime}&`,
+}
+   $.post(dkclick,async(error, response, data) =>{
+     const clickdk = JSON.parse(data)
+      if(clickdk.code == 1) {
+          $.log('\n🎉'+clickdk.msg+'+ '+clickdk.jinbi+'💰\n')
+          $.msg(`\n🎉${title1}\n${title2}💰\n`)
+           }else{
+          $.log('\n⚠️'+clickdk.msg)
+           }
+          resolve()
+    })
+   })
+  } 
+
+
+
 
 function checkWaterNum() {
 return new Promise((resolve, reject) => {
@@ -293,7 +360,7 @@ $.log('\n🔔開始睡覺\n')
       if(startsleep.code == 1) {
           $.log('\n🎉睡覺成功！早睡早起身體好！\n')
            }else{
-          $.log('\n⚠️睡覺失敗:'+startsleep.msg+'\n')
+          $.log('\n⚠️睡覺失敗敗:'+startsleep.msg+'\n')
            }
           resolve()
     })
