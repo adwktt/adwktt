@@ -293,7 +293,7 @@ $.log('\n🔔開始睡覺\n')
       if(startsleep.code == 1) {
           $.log('\n🎉睡覺成功！早睡早起身體好！\n')
            }else{
-          $.log('\n⚠️睡覺失敗敗:'+startsleep.msg+'\n')
+          $.log('\n⚠️睡覺失敗:'+startsleep.msg+'\n')
            }
           resolve()
     })
