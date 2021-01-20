@@ -481,9 +481,9 @@ $.log('\n开始查询小视频上限\n')
      if (smvideo.code == 200){
        for(limit of smvideo.data.list){
          if (limit.ID == 16){
-         smlimit = limit.taskStatus
+         smlimit = limit.CustomerTaskStatus
          $.log(smlimit)
-           if(smlimit != 2){
+           if(smlimit == 0){
               await smVideoTask()
            }else{
 $.log('\n小视频已上限,准备查询视频上限\n')
@@ -508,9 +508,9 @@ function videoLimit() {
      if (video.code == 200){
        for(limit of video.data.list){
          if (limit.ID == 5){
-         Videolimit = limit.taskStatus
+         Videolimit = limit.CustomerTaskStatus
          $.log(Videolimit)
-           if(Videolimit != 2){
+           if(Videolimit == 0){
               await videoTask()
           }else{
 $.log('\n视频已上限,准备观看广告\n')
