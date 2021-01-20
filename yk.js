@@ -58,13 +58,17 @@ if (typeof $request !== 'undefined') {
 } else {
 !(async() => {
 
-      $.msg($.name, '自動閱讀开始🎉🎉🎉')
+
+$.msg($.name, '自動閱讀开始🎉🎉🎉')
    if (now.getHours() == 0){
-      await withDraw();
+      await exchangeInviteTicket();
       await dailyTaskList();
+     }else if (now.getHours() == 8){
+      await signIn();
      }else{
       await dailyTaskList();
      }
+
 
 })()
     .catch((e) => $.logErr(e))
@@ -154,8 +158,10 @@ $.log('\n开始领取签到双倍\n')
      $.log('signdouble\n'+data)
      if(sign2.code == 200){
         $.log('\n'+ sign2.data.TopContent)
+        await dailyTaskList();
        }else {
         $.log('\n'+data)
+        await dailyTaskList();
       }
        resolve()
     })
@@ -517,8 +523,6 @@ $.log('\n视频已上限,准备观看广告\n')
     })
   })
 }
-
-
 
 
 function withDraw() {
