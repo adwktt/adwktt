@@ -302,7 +302,7 @@ return new Promise((resolve, reject) => {
 }
    $.post(guadouble,async(error, response, data) =>{
      const guaka2 = JSON.parse(data)
-$.log('\n🔔開始領取每日觀看獎勵\n')
+$.log('\n🔔開始領取刮卡翻倍獎勵\n')
       if(guaka2.code == 1) {
           $.log('\n🎉刮卡翻倍成功,等待2s後查詢下一張刮刮卡ID\n')
           await $.wait(2000)
