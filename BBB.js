@@ -229,12 +229,11 @@ return new Promise((resolve, reject) => {
    $.post(gualist,async(error, response, data) =>{
 $.log('\n🔔開始查詢刮刮卡ID\n')
      const guaid = JSON.parse(data)
+$.log('\n🔔查詢刮刮卡ID成功,5s後開始刮卡\n')
       if(guaid.ka > 0){
       for (guaId of guaid.list)
       if(guaId.is_ad == 0)
-$.log('\n🔔查詢刮刮卡ID成功,5s後開始刮卡\n')
       guaID = guaId.id
-$.log('\nID: '+guaID+'\n')
           await $.wait(5000)
           await guaDet()
          }else{
@@ -307,6 +306,7 @@ $.log('\n🔔開始領取每日觀看獎勵\n')
       if(guaka2.code == 1) {
           $.log('\n🎉刮卡翻倍成功,等待2s後查詢下一張刮刮卡ID\n')
           await $.wait(2000)
+          await guaList()
            }else{
           $.log('\n⚠️刮卡翻倍失敗:'+guaka2.msg+'\n')
            }
