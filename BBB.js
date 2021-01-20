@@ -163,7 +163,7 @@ return new Promise((resolve, reject) => {
 }
    $.post(zaowandkinfo,async(error, response, data) =>{
      const zwdkinfo = JSON.parse(data)
-      if(zwdkinfo.code == 1) {
+      if(zwdkinfo.code == 1 && zwdkinfo.is_daka == 0) {
       nowTime = zwdkinfo.now_time
       title1 = zwdkinfo.title1
       title2 = zwdkinfo.title2
