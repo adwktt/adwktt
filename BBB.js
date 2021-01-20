@@ -208,7 +208,7 @@ return new Promise((resolve, reject) => {
      const clickdk = JSON.parse(data)
       if(clickdk.code == 1) {
           $.log('\n🎉'+clickdk.msg+'+ '+clickdk.jinbi+'💰\n')
-          $.msg(`\n🎉${title1}\n${title2}💰\n`)
+          $.msg(`🎉${title1}\n${title2}💰`,'','')
            }else{
           $.log('\n⚠️'+clickdk.msg)
            }
@@ -324,21 +324,21 @@ $.log('\n🔔開始查詢睡覺狀態\n')
       sleepStr = slpstatus.nonce_str
       sleepId = slpstatus.taskid
      }else{
-$.msg('🔔大白天的就不要睡覺啦！')
+$.log('🔔大白天的就不要睡覺啦！')
       }
       if(slpstatus.is_sleep == 0 && slpstatus.is_lq == 0 && now.getHours() >= 20) {
-$.msg('🔔都幾點了，還不睡？5s後開始睡覺！')
+$.log('🔔都幾點了，還不睡？5s後開始睡覺！')
           await $.wait(5000)
           await sleepStart()
          }else if((slpstatus.is_sleep == 1 || slpstatus.is_sleep == 0)&& slpstatus.is_lq == 1 && now.getHours() >= 8 && now.getHours() <= 12){
-$.msg('🔔都幾點了，還不起？5s後準備起床！')
+$.log('🔔都幾點了，還不起？5s後準備起床！')
           await $.wait(5000)
           await sleepEnd()
          }else if(slpstatus.is_sleep == 1 && slpstatus.is_lq == 1 && now.getHours() >= 22){
-          $.msg('⚠️睡覺的時候不要玩手機！！！')
+          $.log('⚠️睡覺的時候不要玩手機！！！')
          }else if(slpstatus.is_sleep == 0 &&
 now.getHours() >= 18){
-          $.msg('😘這麼早就準備睡覺了嗎？是身體不舒服嗎？要保重身體呀！')
+          $.log('😘這麼早就準備睡覺了嗎？是身體不舒服嗎？要保重身體呀！')
          }}
           resolve()
     })
