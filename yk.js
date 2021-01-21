@@ -180,7 +180,7 @@ $.log('\n开始查询福利视频上限\n')
      if (dailytask.code == 200){
        for(limit of dailytask.data.list){
          if (limit.ID == 11){
-         welfare = limit. CustomerTaskStatus
+         welfare = limit.customerTaskStatus
          $.log(welfare)
            if(welfare !=2){
               await welfareVideo()
@@ -208,7 +208,7 @@ $.log('\n开始查询分享上限\n')
      if (othertask.code == 200){
        for(limit of othertask.data.list){
          if (limit.ID == 7){
-         share = limit.CustomerTaskStatus
+         share = limit.customerTaskStatus
          $.log(share)
            if(share !=2){
               await shareVideo()
@@ -479,7 +479,7 @@ $.log('\n开始查询小视频上限\n')
      if (smvideo.code == 200){
        for(limit of smvideo.data.list){
          if (limit.ID == 16){
-         smlimit = limit.CustomerTaskStatus
+         smlimit = limit.customerTaskStatus
          $.log(smlimit)
            if(smlimit != 2){
               await smVideoTask()
@@ -506,7 +506,7 @@ function videoLimit() {
      if (video.code == 200){
        for(limit of video.data.list){
          if (limit.ID == 5){
-         Videolimit = limit.CustomerTaskStatus
+         Videolimit = limit.customerTaskStatus
          $.log(Videolimit)
            if(Videolimit != 2){
               await videoTask()
