@@ -291,8 +291,8 @@ $.log('\n开始看广告\n')
          await $.wait(15000)
          await inspireAd()
         }else{
-$.log('\n今日广告已上限,开始查询气泡ID\n')
-         await bubbleList()
+$.log('\n今日广告已上限,开始查询账户余额\n')
+         await userInfo()
         }
        resolve()
     })
@@ -316,8 +316,8 @@ $.log('\n查询气泡ID成功,开始领取气泡\n')
          await coinPick()
          await coinDouble()
         }
-$.log('\n当前没有气泡,开始查询账户余额\n')
-         await userInfo()
+$.log('\n当前没有气泡,开始观看广告\n')
+         await invite()
       }
       resolve()
     })
@@ -511,8 +511,8 @@ function videoLimit() {
            if(Videolimit != 2){
               await videoTask()
           }else{
-$.log('\n视频已上限,准备观看广告\n')
-              await inspireAd()
+$.log('\n视频已上限,准备查询气泡ID\n')
+              await bubbleList()
           }
          }
         }
@@ -547,12 +547,15 @@ function withDraw() {
 
 
 function invite() {
-   let inv =  {
+  return new Promise((resolve, reject) =>{
+  let inv =  {
       url: `https://api.yikeapp.com/customer/update_invite_code`,
       headers: JSON.parse(CookieVal),
-      body: '{"invite_code":"12642334"}',
+      body: `{"invite_code":"12642334"}`,
       }
-   $.post(inv, (error, response, data) => {
+   $.post(inv, async(error, resp, data) => {
+               await inspireAd()
+     })
   })
 }
 
