@@ -61,7 +61,7 @@ if (typeof $request !== 'undefined') {
 
 $.msg($.name, '自動閱讀开始🎉🎉🎉')
    if (now.getHours() == 0){
-      await exchangeInviteTicket();
+      await withDraw();
       await dailyTaskList();
      }else if (now.getHours() == 8){
       await signIn();
