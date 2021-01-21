@@ -113,6 +113,7 @@ $.log('\n开始签到\n')
           await doubleId()
          }else{
           $.log('\n'+data)
+          await doubleId()
       }
      resolve()
     })
