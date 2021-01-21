@@ -165,7 +165,7 @@ return new Promise((resolve, reject) => {
 }
    $.post(zaowandkinfo,async(error, response, data) =>{
      const zwdkinfo = JSON.parse(data)
-      if(zwdkinfo.code == 1 && zwdkinfo.is_daka == 0) {
+      if(zwdkinfo.code == 1 && zwdkinfo.is_dk == 0) {
       nowTime = zwdkinfo.now_time
       title1 = zwdkinfo.title1
       title2 = zwdkinfo.title2
@@ -210,7 +210,7 @@ return new Promise((resolve, reject) => {
      const clickdk = JSON.parse(data)
       if(clickdk.code == 1) {
           $.log('\n🎉'+clickdk.msg+'+ '+clickdk.jinbi+'💰\n')
-          $.msg(`🎉${title1}\n${title2}💰`,'','')
+          $.msg(`${title1}`,`${title2}`,'')
           await checkWaterNum()
            }else{
           $.log('\n⚠️'+clickdk.msg)
@@ -419,7 +419,6 @@ return new Promise((resolve, reject) => {
     headers: JSON.parse(CookieVal),
 }
    $.post(sleepstatus,async(error, response, data) =>{
-$.log(data)
 $.log('\n🔔開始查詢睡覺狀態\n')
      const slpstatus = JSON.parse(data)
       if(slpstatus.code == 1) {
