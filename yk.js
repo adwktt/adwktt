@@ -180,9 +180,9 @@ $.log('\n开始查询福利视频上限\n')
      if (dailytask.code == 200){
        for(limit of dailytask.data.list){
          if (limit.ID == 11){
-         welfare = limit.finishCount
+         welfare = limit. CustomerTaskStatus
          $.log(welfare)
-           if(welfare < 9){
+           if(welfare !=2){
               await welfareVideo()
            }else{
 $.log('\n今日福利视频已上限,准备查询分享上限\n')
@@ -208,9 +208,9 @@ $.log('\n开始查询分享上限\n')
      if (othertask.code == 200){
        for(limit of othertask.data.list){
          if (limit.ID == 7){
-         share = limit.finishCount
+         share = limit.CustomerTaskStatus
          $.log(share)
-           if(share < 50){
+           if(share !=2){
               await shareVideo()
           }else{
 $.log('\n今日分享已上限,准备查询小视频上限\n')
@@ -286,15 +286,13 @@ function inspireAd() {
 $.log('\n开始看广告\n')
    $.post(inspiread, async(error, resp, data) => {
      let inspire = JSON.parse(data)
-     if(inspire.msg.indexOf('上限') != -1){
-$.log('\n今日广告已上限,开始查询气泡ID\n')
-$.log(data)
-         await bubbleList()
-        }else{
-$.log(data)
+     if(inspire.msg.indexOf('15秒') != -1 ||inspire.msg.indexOf('成功') != -1){
      $.log('\n广告金币: '+inspire.data.TopContent)
          await $.wait(15000)
          await inspireAd()
+        }else{
+$.log('\n今日广告已上限,开始查询气泡ID\n')
+         await bubbleList()
         }
        resolve()
     })
@@ -483,7 +481,7 @@ $.log('\n开始查询小视频上限\n')
          if (limit.ID == 16){
          smlimit = limit.CustomerTaskStatus
          $.log(smlimit)
-           if(smlimit == 0){
+           if(smlimit != 2){
               await smVideoTask()
            }else{
 $.log('\n小视频已上限,准备查询视频上限\n')
@@ -510,7 +508,7 @@ function videoLimit() {
          if (limit.ID == 5){
          Videolimit = limit.CustomerTaskStatus
          $.log(Videolimit)
-           if(Videolimit == 0){
+           if(Videolimit != 2){
               await videoTask()
           }else{
 $.log('\n视频已上限,准备观看广告\n')
