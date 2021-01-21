@@ -56,13 +56,14 @@ $.msg($.name,"開始🎉🎉🎉")
 
       await userInfo()
       await signIn()
+      await checkWaterNum()
       await zaoWanDkInfo()
       await sleepStatus()
-      await checkWaterNum()
       await clickTaskStatus()
       await watchTaskStatus()
       await helpStatus()
       await getNewsId()
+      await checkWaterNum()
       await getQuestionId()
       await guaList()
       await checkHomeJin()
@@ -210,8 +211,10 @@ return new Promise((resolve, reject) => {
       if(clickdk.code == 1) {
           $.log('\n🎉'+clickdk.msg+'+ '+clickdk.jinbi+'💰\n')
           $.msg(`🎉${title1}\n${title2}💰`,'','')
+          await checkWaterNum()
            }else{
           $.log('\n⚠️'+clickdk.msg)
+          await checkWaterNum()
            }
           resolve()
     })
@@ -229,15 +232,17 @@ return new Promise((resolve, reject) => {
    $.post(gualist,async(error, response, data) =>{
 $.log('\n🔔開始查詢刮刮卡ID\n')
      const guaid = JSON.parse(data)
-$.log('\n🔔查詢刮刮卡ID成功,5s後開始刮卡\n')
       if(guaid.ka > 0){
-      for (guaId of guaid.list)
+      for (guaId of guaid.list){
       if(guaId.is_ad == 0)
-      guaID = guaId.id
+      GID = guaId.id
+$.log('\n🔔查詢刮刮卡ID成功,5s後開始查询刮卡签名\n')
+$.log('\nGID: '+GID+'\n')
           await $.wait(5000)
           await guaDet()
-         }else{
+         }}else{
 $.log('\n⚠️刮刮卡已用完,請明天再刮吧！\n')
+          await checkWaterNum()
         }
 
           resolve()
@@ -251,7 +256,7 @@ return new Promise((resolve, reject) => {
   let guadet ={
     url: `https://bububao.duoshoutuan.com/gua/guadet?`,
     headers: JSON.parse(CookieVal),
-    body: `gid=${guaID}&`
+    body: `gid=${GID}&`
 }
    $.post(guadet,async(error, response, data) =>{
 $.log('\n🔔開始查詢刮卡簽名\n')
@@ -275,7 +280,7 @@ return new Promise((resolve, reject) => {
   let guapost ={
     url: `https://bububao.duoshoutuan.com/gua/guapost?`,
     headers: JSON.parse(CookieVal),
-    body: `sign=${SIGN}&gid=${guaID}&glid=${GLID}&`
+    body: `sign=${SIGN}&gid=${GID}&glid=${GLID}&`
 }
    $.post(guapost,async(error, response, data) =>{
 $.log('\n🔔開始刮卡\n')
@@ -306,7 +311,7 @@ $.log('\n🔔開始領取刮卡翻倍獎勵\n')
       if(guaka2.code == 1) {
           $.log('\n🎉刮卡翻倍成功,等待2s後查詢下一張刮刮卡ID\n')
           await $.wait(2000)
-          await guaList()
+          //await guaList()
            }else{
           $.log('\n⚠️刮卡翻倍失敗:'+guaka2.msg+'\n')
            }
@@ -414,6 +419,7 @@ return new Promise((resolve, reject) => {
     headers: JSON.parse(CookieVal),
 }
    $.post(sleepstatus,async(error, response, data) =>{
+$.log(data)
 $.log('\n🔔開始查詢睡覺狀態\n')
      const slpstatus = JSON.parse(data)
       if(slpstatus.code == 1) {
@@ -423,14 +429,16 @@ $.log('\n🔔開始查詢睡覺狀態\n')
      }else{
 $.log('🔔大白天的就不要睡覺啦！')
       }
-      if(slpstatus.is_sleep == 0 && slpstatus.is_lq == 0 && now.getHours() >= 20) {
+      if(slpstatus.is_sleep == 0 && slpstatus.is_lq == 1 && now.getHours() >= 20) {
 $.log('🔔都幾點了，還不睡？5s後開始睡覺！')
           await $.wait(5000)
           await sleepStart()
-         }else if((slpstatus.is_sleep == 1 || slpstatus.is_sleep == 0)&& slpstatus.is_lq == 1 && now.getHours() >= 8 && now.getHours() <= 12){
+         }else if((slpstatus.is_sleep == 1 || slpstatus.is_sleep == 0)&& slpstatus.is_lq == 0 && now.getHours() >= 8 && now.getHours() <= 12){
 $.log('🔔都幾點了，還不起？5s後準備起床！')
           await $.wait(5000)
           await sleepEnd()
+         }else if(slpstatus.is_sleep == 0 && slpstatus.is_lq == 1 && now.getHours() >= 8 && now.getHours() <= 12){
+          await sleepDone()
          }else if(slpstatus.is_sleep == 1 && slpstatus.is_lq == 1 && now.getHours() >= 22){
           $.log('⚠️睡覺的時候不要玩手機！！！')
          }else if(slpstatus.is_sleep == 0 &&
@@ -476,7 +484,7 @@ return new Promise((resolve, reject) => {
 $.log('\n🔔開始起床\n')
       if(endsleep.code == 1) {
           $.log('\n🎉起床了！別睡了！\n')
-          await sleepDone()
+          await sleepStatus()
            }else{
           $.log('\n⚠️起床失敗:'+endsleep.msg+'\n')
            }
@@ -544,6 +552,7 @@ $.log('\n🔔每日觀看廣告任務狀態查詢成功,1s後查詢每日觀看�
           await checkDailyWatchAdId()
          }else{
           $.log('\n⚠️每日看廣告任務已上限\n')
+          await checkWaterNum()
          }
        resolve()
     })
@@ -685,15 +694,19 @@ return new Promise((resolve, reject) => {
 }
    $.post(checkhomejin,async(error, response, data) =>{
      const checkhomejb = JSON.parse(data)
-     if(checkhomejb.right_st !=2 && checkhomejb.right_time > 0){
+     if(checkhomejb.right_st == 0){
+          await homeJin()
+         }else if(checkhomejb.right_st == 1){
 $.log('\n🔔開始查詢首頁金幣狀態\n')
 $.log('\n🔔等待'+(checkhomejb.right_time+5)+'s领取首页金币')
           await $.wait(checkhomejb.right_time*1000+5000)
           await homeJin()
-         }else if(checkhomejb.right_st == 0 && checkhomejb.right_time <= 0){
-$.log('\n🔔開始查詢首頁金幣狀態\n')
-          await homeJin()
-         }else if(checkhomejb.right_st == 2 && checkhomejb.jindan_show != 2){
+         }else if(checkhomejb.right_st == 2 && checkhomejb.jindan_show == 0){
+$.log('\n🔔開始查詢首頁金蛋狀態\n')
+$.log('\n🔔等待'+(checkhomejb.jindan_djs+5)+'s领取金蛋獎勵')
+          await $.wait(checkhomejb.jindan_djs*1000+5000)
+          await checkGoldEggId()
+         }else if(checkhomejb.right_st == 2 && checkhomejb.jindan_show == 1){
 $.log('\n🔔開始查詢首頁金蛋狀態\n')
 $.log('\n🔔等待'+(checkhomejb.jindan_djs+5)+'s领取金蛋獎勵')
           await $.wait(checkhomejb.jindan_djs*1000+5000)
@@ -714,10 +727,9 @@ time = checkhomejb.hb_time+5
           }
           await $.wait(checkhomejb.hb_time*1000+5000)
           await checkRedBagId()
-         }else if(checkhomejb.right_st == 2 && checkhomejb.jindan_show == 2 && checkhomejb.hb_time < 0){
-          await checkRedBagId()
          }else if(checkhomejb.right_st == 2 && checkhomejb.jindan_show == 2 && checkhomejb.hb_st == 2){
 $.log('\n🔔首頁金幣狀態:'+checkhomejb.right_text+'\n🔔首頁紅包狀態:'+checkhomejb.hb_text+'\n🔔首頁金蛋狀態:'+checkhomejb.jindan_text+'\n')
+          await checkWaterNum()
          }
           resolve()
     })
