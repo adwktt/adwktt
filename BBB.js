@@ -54,7 +54,6 @@ if(CookieVal)$.setdata(CookieVal,'bbb_ck')
 
 $.msg($.name,"開始🎉🎉🎉")
 
-      await userInfo()
       await signIn()
       await checkWaterNum()
       await zaoWanDkInfo()
@@ -67,6 +66,7 @@ $.msg($.name,"開始🎉🎉🎉")
       await getQuestionId()
       await guaList()
       await checkHomeJin()
+      await userInfo()
       await showmsg()
 
 })()
