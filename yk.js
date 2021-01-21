@@ -90,7 +90,7 @@ function userInfo() {
        name = info.data.CustomerNickname
        coin = info.data.CoinNumber
        $.msg($.name, "昵称:"+name+" 账户金币"+coin+"💰\n")
-           await invite()
+         await videoLimit()
      }
      resolve()
     })
