@@ -1003,7 +1003,7 @@ return new Promise((resolve, reject) => {
    $.post(getnewsid,async(error, response, data) =>{
      const newsid = JSON.parse(data)
      if(newsid.code == 1){
-       if(newsid.is_first == 1 && newsid.is_max == 0){
+       if(newsid.is_max == 0){
           $.log('\n🔔開始查詢新聞ID\n')
           newsStr = newsid.nonce_str
           $.log('\n🎉新聞ID查詢成功,15s後領取閱讀獎勵\n')
