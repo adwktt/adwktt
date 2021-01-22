@@ -270,7 +270,7 @@ $.log('\n开始看视频\n')
        } else {
         $.log('\n视频'+data)
          await $.wait(32000)
-         await videoLimit()
+         await bubbleList()
       }
        resolve()
     })
