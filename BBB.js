@@ -232,8 +232,8 @@ return new Promise((resolve, reject) => {
 $.log('\n🔔開始查詢刮刮卡ID\n')
      const guaid = JSON.parse(data)
       if(guaid.ka > 0){
-      for (guaId of guaid.list){
-      if(guaId.is_ad == 0)
+      for (guaId of guaid.list)
+      if(guaId.is_ad == 0){
       GID = guaId.id
 $.log('\n🔔查詢刮刮卡ID成功,5s後開始查询刮卡签名\n')
 $.log('\nGID: '+GID+'\n')
