@@ -405,7 +405,7 @@ return new Promise((resolve, reject) => {
      if(limit.data.isUperLimit == false){
           await getGoldVideoId()
            }else{
-          $.log('\n⚠️金蛋視頻已上限:\n')
+          $.log('\n⚠️金蛋視頻已上限\n')
            }
           resolve()
     })
@@ -425,7 +425,7 @@ return new Promise((resolve, reject) => {
      if(limit.data.isUperLimit == false){
           await getLiveId()
            }else{
-          $.log('\n⚠️直播視頻已上限:\n')
+          $.log('\n⚠️直播視頻已上限\n')
            }
           resolve()
     })
