@@ -155,7 +155,7 @@ if($request&&$request.url.indexOf("get_context_info")>=0) {
      $.msg($.name,"獲取Cookie成功")
    }
 
-if($request&&($request.url.indexOf("login_by_wx.json")>=0||$request.url.indexOf("app_register_by_phone.json")>=0)) {
+if($request&&($request.url.indexOf("login_by_wx.json")>=0||$request.url.indexOf("app_register_by_phone")>=0)) {
      const refreshToken = $response.body.match(/refreshToken":"(\w+)","refreshExpiration/)[1]
    if(refreshToken)$.setdata(refreshToken,`xp_rtk${$.idx}`)
      $.log(`refreshToken:${refreshToken}`)
