@@ -213,7 +213,7 @@ return new Promise((resolve, reject) => {
      if(draw.resultCode == 1){
      message += '🎉成功提現'+draw.data.remark+'💸\n'
     }else{
-     message +='⚠️異常'+coincheck.errorDesc+'\n'
+     message +='⚠️異常'+ draw.errorDesc+'\n'
            }
           resolve()
     })
