@@ -102,12 +102,12 @@ if (! CookieArr[0]) {
   for (let i = 1; i <= 46; i++) {
 if(i%2 == 0){
 $.log('\n🔔第'+(i/2)+'次♻️金蛋視頻開始')
-      await getGoldVideoId()
+      await goldVideoLimit()
 $.log('\n🔔第'+(i/2)+'次♻️巡查直播間開始')
       await liveLimit()
       }else{
 $.log('\n🔔第'+i+'次♻️紅包視頻開始')
-      await getRedbagVideoId()
+      await redbagVideoLimit()
      }
     }
   }
@@ -115,12 +115,12 @@ $.log('\n🔔第'+i+'次♻️紅包視頻開始')
   for (let i = 1; i <= 22; i++) {
 if(i%2 == 0){
 $.log('\n🔔第'+(i/2)+'次♻️金蛋視頻開始')
-      await getGoldVideoId()
+      await goldVideoLimit()
 $.log('\n🔔第'+(i/2)+'次♻️巡查直播間開始')
       await liveLimit()
       }else{
 $.log('\n🔔第'+i+'次♻️紅包視頻開始')
-      await getRedbagVideoId()
+      await redbagVideoLimit()
      }
     }
   }
@@ -128,12 +128,12 @@ $.log('\n🔔第'+i+'次♻️紅包視頻開始')
   for (let i = 1; i <= 18; i++) {
 if(i%2 == 0){
 $.log('\n🔔第'+(i/2)+'次♻️金蛋視頻開始')
-      await getGoldVideoId()
+      await goldVideoLimit()
 $.log('\n🔔第'+(i/2)+'次♻️巡查直播間開始')
       await liveLimit()
       }else{
 $.log('\n🔔第'+i+'次♻️紅包視頻開始')
-      await getRedbagVideoId()
+      await redbagVideoLimit()
      }
     }
   }
@@ -385,7 +385,7 @@ return new Promise((resolve, reject) => {
      if(limit.data.isUperLimit == false){
           await getRedbagVideoId()
            }else{
-          $.log('\n⚠️紅包視頻已上限:\n')
+          $.log('\n⚠️紅包視頻已上限\n')
            }
           resolve()
     })
