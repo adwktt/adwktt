@@ -14,7 +14,7 @@ adwktt
 #笑谱
 https://veishop.iboxpay.com/nf_gateway/nf_user_center_web/shopkeeper/v1/get_context_info.json url script-request-header https://raw.githubusercontent.com/adwktt/adwktt/master/xp.js
 
-https://veishop.iboxpay.com/nf_gateway/nf-user-auth-web/ignore_tk/veishop/v1/(login_by_wx.json| app_register_by_phone.json) url script-response-body https://raw.githubusercontent.com/adwktt/adwktt/master/xp.js
+https://veishop.iboxpay.com/nf_gateway/nf-user-auth-web/ignore_tk/veishop/v1/(login_by_wx.json|app_register_by_phone.json) url script-response-body https://raw.githubusercontent.com/adwktt/adwktt/master/xp.js
 [task_local]
 0,30 7-23 * * * https://raw.githubusercontent.com/adwktt/adwktt/master/xp.js, tag=笑谱, 
 loon
