@@ -2,7 +2,7 @@
 adwktt
 轉載備註名字
 1、登录状态打开App,点“我的”获取Cookie
-2、用微信重新登录获取token
+2、用微信或者短信重新登录获取token,
 下載地址：
 
 来笑谱，一起领20元现金！￥10.S0AQZrKps9Oz
@@ -155,7 +155,7 @@ if($request&&$request.url.indexOf("get_context_info")>=0) {
      $.msg($.name,"獲取Cookie成功")
    }
 
-if($request&&$request.url.indexOf("login_by_wx.json")>=0) {
+if($request&&$request.url.indexOf("login_by.json")>=0) {
      const refreshToken = $response.body.match(/refreshToken":"(\w+)","refreshExpiration/)[1]
    if(refreshToken)$.setdata(refreshToken,`xp_rtk${$.idx}`)
      $.log(`refreshToken:${refreshToken}`)
