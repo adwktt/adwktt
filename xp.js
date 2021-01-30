@@ -1,7 +1,8 @@
 /*
 adwktt
 轉載備註名字
-打开App获取Cookie
+1、登录状态打开App,点“我的”获取Cookie
+2、用微信重新登录获取token
 下載地址：
 
 来笑谱，一起领20元现金！￥10.S0AQZrKps9Oz
@@ -11,11 +12,11 @@ adwktt
 圈x
 [rewrite_local]
 #笑谱
-https://veishop.iboxpay.com/nf_gateway/nf_user_center_web/shopkeeper/v1/get_context_info.json - script-request-header https://raw.githubusercontent.com/adwktt/adwktt/master/xp.js
+https://veishop.iboxpay.com/nf_gateway/nf_user_center_web/shopkeeper/v1/get_context_info.json url script-request-header https://raw.githubusercontent.com/adwktt/adwktt/master/xp.js
 
+https://veishop.iboxpay.com/nf_gateway/nf-user-auth-web/ignore_tk/veishop/v1/login_by_wx.json url script-response-body https://raw.githubusercontent.com/adwktt/adwktt/master/xp.js
 [task_local]
 0,30 7-23 * * * https://raw.githubusercontent.com/adwktt/adwktt/master/xp.js, tag=笑谱, 
-
 loon
 [Script]
 http-request https://veishop.iboxpay.com/nf_gateway/nf_user_center_web/shopkeeper/v1/get_context_info.json script-path= https://raw.githubusercontent.com/adwktt/adwktt/master/xp.js, timeout=10, tag= 笑谱
@@ -35,6 +36,8 @@ $.idx = ($.idx = ($.getval("xpsetting") || "1") - 1) > 0 ? `${$.idx + 1}` : ""; 
 const CookieArr = []
 
 let CookieVal = $.getdata('xp_ck')
+
+let refreshToken = $.getdata('xp_rtk')
 
 var hour=''
 var minute=''
@@ -91,7 +94,7 @@ if (! CookieArr[0]) {
       $.index = i + 1;
       $.msg($.name+`${$.index}`, '自動閱讀開始🎉🎉🎉')
 
-
+      await getToken()
       await activityList()
    if (hour === 7 && minute === 0){
       await coinCheck()
@@ -151,15 +154,41 @@ if($request&&$request.url.indexOf("get_context_info")>=0) {
      $.log(`Cookie:${CookieVal}`)
      $.msg($.name,"獲取Cookie成功")
    }
+
+if($request&&$request.url.indexOf("login_by_wx.json")>=0) {
+     const refreshToken = $response.body.match(/refreshToken":"(\w+)","refreshExpiration/)[1]
+   if(refreshToken)$.setdata(refreshToken,`xp_rtk${$.idx}`)
+     $.log(`refreshToken:${refreshToken}`)
+     $.msg($.name,"獲取refreshToken成功")
+   }
  }
 
+
+function getToken() {
+return new Promise((resolve, reject) => {
+  let timestamp=new Date().getTime();
+  let url ={
+      url: `https://veishop.iboxpay.com/nf_gateway/nf_user_auth_web/uc/ignore_tk/v1/refresh_access_token_to_c.json`,
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      body: `{"refreshToken":"${refreshToken}","source":"VEISHOP_APP_IOS"}`
+}
+   $.post(url,async(error, response, data) =>{
+     const obj = JSON.parse(data)
+     if(obj.resultCode == 1){
+     refreshToken = obj.data.refreshToken
+     token = obj.data.accessToken
+           }
+          resolve()
+    })
+   })
+  } 
 
 function userInfo() {
 return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let userInfo ={
-    url: 'https://veishop.iboxpay.com/nf_gateway/nf_user_center_web/shopkeeper/v1/get_context_info.json?source=WX_APP_KA_HTZP',
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      url: 'https://veishop.iboxpay.com/nf_gateway/nf_user_center_web/shopkeeper/v1/get_context_info.json?source=WX_APP_KA_HTZP',
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
 }
    $.get(userInfo,async(error, response, data) =>{
      const userinfo = JSON.parse(data)
@@ -173,13 +202,12 @@ return new Promise((resolve, reject) => {
    })
   } 
 
-
 function coinCheck() {
 return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let coincheck ={
     url: 'https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/day_cash/v1/balance.json?source=WX_APP_KA_HTZP',
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
 }
    $.get(coincheck,(error, response, data) =>{
      const checkcoin = JSON.parse(data)
@@ -205,7 +233,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let withdraw ={
     url: 'https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/activity/v1/withdraw.json',
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
       body: `{"source":"WX_APP_KA_HTZP","bizType":2,"amount":${cash}}`
 }
    $.post(withdraw,(error, response, data) =>{
@@ -213,7 +241,7 @@ return new Promise((resolve, reject) => {
      if(draw.resultCode == 1){
      message += '🎉成功提現'+draw.data.remark+'💸\n'
     }else{
-     message +='⚠️異常'+ draw.errorDesc+'\n'
+     message +='⚠️異常'+coincheck.errorDesc+'\n'
            }
           resolve()
     })
@@ -226,7 +254,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let redbagrecode ={
     url: `https://veishop.iboxpay.com/nf_gateway/nf_content_service/video/ignore_tk/v1/video_channel/uplaod_play_video_recode.json`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
     body: `{"videoPublishId":"${ID}","playTimeLenght":15,"type":1,"videoTime":${videoTime}}`,
 }
    $.post(redbagrecode,async(error, response, data) =>{
@@ -251,7 +279,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let redbagvideo ={
     url: `https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/day_cash/v1/give_gold_coin_by_video.json`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
     body: `{"type":1,"videoList":[{"videoId":"${ID}","type":1,"isFinishWatch":false}],"actId":"${videoId}"}`,
 }
    $.post(redbagvideo,async(error, response, data) =>{
@@ -275,7 +303,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let goldrecode ={
     url: `https://veishop.iboxpay.com/nf_gateway/nf_content_service/video/ignore_tk/v1/video_channel/uplaod_play_video_recode.json`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
     body: `{"videoPublishId":"${ID2}","playTimeLenght":30,"type":1,"videoTime":${videoTime2}}`,
 }
    $.post(goldrecode,async(error, response, data) =>{
@@ -300,7 +328,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let goldvideo ={
     url: `https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/day_cash/v1/give_gold_coin_by_video.json`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
     body: `{"type":2,"videoList":[{"videoId":"${ID2}","type":1,"isFinishWatch":false}],"actId":"${videoId}"}`,
 }
    $.post(goldvideo,async(error, response, data) =>{
@@ -324,7 +352,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let livevideo ={
     url: `https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/day_cash/v1/give_redbag_by_live.json`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
     body: `{"actId":"${liveId}","liveId":"${ID3}"}`,
 }
    $.post(livevideo, async(error, response, data) =>{
@@ -350,7 +378,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let redbagvideolimit ={
     url: 'https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/day_cash/ignore_tk/v1/get_video_act.json',
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
 }
    $.get(redbagvideolimit, async(error, response, data) =>{
      const limit = JSON.parse(data)
@@ -370,7 +398,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let goldvideolimit ={
     url: 'https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/day_cash/ignore_tk/v1/get_video_act.json',
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
 }
    $.get(goldvideolimit, async(error, response, data) =>{
      const limit = JSON.parse(data)
@@ -390,7 +418,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let livelimit ={
     url: 'https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/day_cash/ignore_tk/v1/query_live_act.json',
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
 }
    $.get(livelimit, async(error, response, data) =>{
      const limit = JSON.parse(data)
@@ -410,7 +438,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let checkliveredbag ={
     url: `https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/day_cash/v1/has_redbag_by_live.json?liveId=${ID3}`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
 }
    $.get(checkliveredbag,async(error, response, data) =>{
      const result = JSON.parse(data)
@@ -434,7 +462,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let leaveliveroom ={
     url: `https://veishop.iboxpay.com/nf_gateway/nf_content_service/live/ignore_tk/v1/leave_live.json`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
       body: `{"sessionId":"1e54e9eb7f9c66e908111b041f1a40a7","liveId":"${ID3}"}`,
 }
    $.post(leaveliveroom,async(error, response, data) =>{
@@ -457,7 +485,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let liveroomdetail ={
     url: `https://veishop.iboxpay.com/nf_gateway/nf_content_service/live/ignore_tk/v1/query_live_detail_by_audience.json?entryPath=2&liveId=${ID3}`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
 }
    $.get(liveroomdetail,async(error, response, data) =>{
      const result = JSON.parse(data)
@@ -475,7 +503,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let goodscoupon ={
     url: `https://veishop.iboxpay.com/nf_gateway/nf_content_service/live/ignore_tk/v1/query_live_goods_coupon.json?liveId=${ID3}`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
 }
    $.get(goodscoupon,async(error, response, data) =>{
      const result = JSON.parse(data)
@@ -493,7 +521,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let goodslist ={
     url: `https://veishop.iboxpay.com/nf_gateway/nf_content_service/live/ignore_tk/v1/query_live_goods_list.json?current=1&liveId=${ID3}&size=100`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
 }
    $.get(goodslist,async(error, response, data) =>{
      const result = JSON.parse(data)
@@ -511,7 +539,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let enterliveroom ={
     url: `https://veishop.iboxpay.com/nf_gateway/nf_content_service/live/ignore_tk/v1/in_live.json?entryPath=2&liveId=${ID3}&sessionId=1e54e9eb7f9c66e908111b041f1a40a7`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
 }
    $.get(enterliveroom,async(error, response, data) =>{
      const result = JSON.parse(data)
@@ -534,7 +562,7 @@ function getRedbagVideoId() {
    let timestamp=new Date().getTime();
    let getvideoid =  {
       url: `https://veishop.iboxpay.com/nf_gateway/nf_content_service/video/ignore_tk/v1/video_channel/query_video_list.json?current=${timestamp%7+1}&returnCount=0&size=6`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
       }
    $.get(getvideoid, async(error, resp, data) => {
      let getid = JSON.parse(data)
@@ -558,7 +586,7 @@ function getGoldVideoId() {
   let timestamp=new Date().getTime();
    let getgoldvideoid =  {
       url: `https://veishop.iboxpay.com/nf_gateway/nf_content_service/video/ignore_tk/v1/video_channel/query_video_list.json?current=${timestamp%7+1}&returnCount=0&size=1`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
       }
    $.get(getgoldvideoid, async(error, resp, data) => {
      let getid = JSON.parse(data)
@@ -589,7 +617,7 @@ function getLiveId() {
   let timestamp=new Date().getTime();
    let getvideoid =  {
       url: `https://veishop.iboxpay.com/nf_gateway/nf_content_service/live/ignore_tk/v1/query_living_list_id.json`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
       }
    $.get(getvideoid, async(error, resp, data) => {
      let getid = JSON.parse(data)
@@ -615,7 +643,7 @@ function checkHelpId() {
    let timestamp=new Date().getTime();
    let checkhelpid =  {
       url: `https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/invite/v1/activity_detail.json?source=WX_APP_KA_HTZP&actType=6`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
       }
    $.get(checkhelpid, async(error, resp, data) => {
      let helpid = JSON.parse(data)
@@ -633,7 +661,7 @@ function help() {
   let timestamp=new Date().getTime();
   let Help =  {
       url: `https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/invite/v1/gain_reward.json`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
       body: `{"source":"WX_APP_KA_HTZP","type":5,"actId":"${helpID}","qrcode":"1354746337610887168"}`,
       }
    $.post(Help, async(error, resp, data) => {
@@ -647,7 +675,7 @@ function activityList() {
    let timestamp=new Date().getTime();
    let activitylist =  {
       url: `https://veishop.iboxpay.com/nf_gateway/nf_customer_activity/day_cash/ignore_tk/v1/query_act_list.json?source=WX_APP_KA_HTZP`,
-      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(CookieVal.replace(/161\d{10}/,`${timestamp}`).replace(/token":"\w+"/,`token":"${token}"`)),
       }
    $.get(activitylist, async(error, resp, data) => {
      let activity = JSON.parse(data)
