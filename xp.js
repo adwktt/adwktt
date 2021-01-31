@@ -96,7 +96,7 @@ if (! CookieArr[0]) {
 
       await getToken()
       await activityList()
-   if (hour === 7 && minute === 0){
+   if (hour === 9 && minute === 0){
       await coinCheck()
       await withDraw()
   for (let i = 1; i <= 46; i++) {
@@ -111,7 +111,7 @@ $.log('\n🔔第'+i+'次♻️紅包視頻開始')
      }
     }
   }
-   if (hour >= 8 && hour <= 12){
+   if (hour >= 10 && hour <= 11){
   for (let i = 1; i <= 22; i++) {
 if(i%2 == 0){
 $.log('\n🔔第'+(i/2)+'次♻️金蛋視頻開始')
@@ -124,7 +124,7 @@ $.log('\n🔔第'+i+'次♻️紅包視頻開始')
      }
     }
   }
-   if (hour >= 20 && hour <= 22){
+   if (hour >= 20 && hour <= 21){
   for (let i = 1; i <= 18; i++) {
 if(i%2 == 0){
 $.log('\n🔔第'+(i/2)+'次♻️金蛋視頻開始')
