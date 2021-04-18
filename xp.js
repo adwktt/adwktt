@@ -37,7 +37,7 @@ const CookieArr = []
 
 let CookieVal = $.getdata('xp_ck')
 
-let cookieVal = $.getdata('xp_cookie')
+let Cookie = $.getdata('xp_cookie')
 
 let refreshToken = $.getdata('xp_rtk')
 
@@ -158,9 +158,9 @@ if($request&&$request.url.indexOf("get_context_info")>=0) {
    }
 
 if($request&&($request.url.indexOf("login_by_wx.json")>=0||$request.url.indexOf("app_register_by_phone")>=0)) {
-     const cookieVal = JSON.stringify($request.headers)
-   if(cookieVal)$.setdata(cookieVal,`xp_cookie${$.idx}`)
-     $.log(`cookie:${cookieVal}`)
+     const Cookie = JSON.stringify($request.headers)
+   if(Cookie)$.setdata(Cookie,`xp_cookie${$.idx}`)
+     $.log(`Cookieval:${Cookie}`)
      $.msg($.name,"獲取cookie成功")
    }
 
