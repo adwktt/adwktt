@@ -180,7 +180,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let url ={
       url: `https://veishop.iboxpay.com/nf_gateway/nf_user_auth_web/uc/ignore_tk/v1/refresh_access_token_to_c.json`,
-      headers: JSON.parse(cookieVal.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(Cookie.replace(/161\d{10}/,`${timestamp}`)),
       body: `{"refreshToken":"${refreshToken}","source":"VEISHOP_APP_IOS"}`
 }
    $.post(url,async(error, response, data) =>{
