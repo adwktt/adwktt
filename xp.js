@@ -37,6 +37,8 @@ const CookieArr = []
 
 let CookieVal = $.getdata('xp_ck')
 
+let cookieVal = $.getdata('xp_ck2')
+
 let refreshToken = $.getdata('xp_rtk')
 
 var hour=''
@@ -162,7 +164,7 @@ if($request&&($request.url.indexOf("login_by_wx.json")>=0||$request.url.indexOf(
      $.msg($.name,"獲取refreshToken成功")
 
      const cookieVal = JSON.stringify($request.headers)
-   if(cookieVal)$.setdata(cookieVal,`xp_ck${$.idx}`)
+   if(cookieVal)$.setdata(cookieVal,`xp_ck2${$.idx}`)
      $.log(`cookie:${cookieVal}`)
      $.msg($.name,"獲取cookie成功")
    }
