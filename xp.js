@@ -158,19 +158,15 @@ if($request&&$request.url.indexOf("get_context_info")>=0) {
    }
 
 if($request&&($request.url.indexOf("login_by_wx.json")>=0||$request.url.indexOf("app_register_by_phone")>=0)) {
-
-     const HeaderVal = JSON.stringify($request.headers)
-   if(HeaderVal)$.setdata(HeaderVal,`xp_hd${$.idx}`)
-     $.log(`HeaderVal:${HeaderVal}`)
-     $.msg($.name,"獲取HeaderVal成功")
-   }
-
-if($request&&($request.url.indexOf("login_by_wx.json")>=0||$request.url.indexOf("app_register_by_phone")>=0)) {
      const refreshToken = $response.body.match(/refreshToken":"(\w+)","refreshExpiration/)[1]
    if(refreshToken)$.setdata(refreshToken,`xp_rtk${$.idx}`)
      $.log(`refreshToken:${refreshToken}`)
      $.msg($.name,"獲取refreshToken成功")
 
+     const HeaderVal = JSON.stringify($request.headers)
+   if(HeaderVal)$.setdata(HeaderVal,`xp_hd${$.idx}`)
+     $.log(`HeaderVal:${HeaderVal}`)
+     $.msg($.name,"獲取HeaderVal成功")
    }
 
  }
