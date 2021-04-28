@@ -157,16 +157,18 @@ if($request&&$request.url.indexOf("get_context_info")>=0) {
      $.msg($.name,"獲取Cookie成功")
    }
 
+if($request&&$request.url.indexOf("visitor_login.json")>=0) {
+     const HeaderVal = JSON.stringify($request.headers)
+   if(HeaderVal)$.setdata(HeaderVal,`xp_hd${$.idx}`)
+     $.log(`HeaderVal:${HeaderVal}`)
+     $.msg($.name,"獲取HeaderVal成功")
+   }
+
 if($request&&($request.url.indexOf("login_by_wx.json")>=0||$request.url.indexOf("app_register_by_phone")>=0)) {
      const refreshToken = $response.body.match(/refreshToken":"(\w+)","refreshExpiration/)[1]
    if(refreshToken)$.setdata(refreshToken,`xp_rtk${$.idx}`)
      $.log(`refreshToken:${refreshToken}`)
      $.msg($.name,"獲取refreshToken成功")
-
-     const HeaderVal = JSON.stringify($request.headers)
-   if(HeaderVal)$.setdata(HeaderVal,`xp_hd${$.idx}`)
-     $.log(`HeaderVal:${HeaderVal}`)
-     $.msg($.name,"獲取HeaderVal成功")
    }
 
  }
@@ -177,7 +179,7 @@ return new Promise((resolve, reject) => {
   let timestamp=new Date().getTime();
   let url ={
       url: `https://veishop.iboxpay.com/nf_gateway/nf_user_auth_web/uc/ignore_tk/v1/refresh_access_token_to_c.json`,
-      headers: JSON.parse(Cookie.replace(/161\d{10}/,`${timestamp}`)),
+      headers: JSON.parse(HeaderVal.replace(/161\d{10}/,`${timestamp}`)),
       body: `{"refreshToken":"${refreshToken}","source":"VEISHOP_APP_IOS"}`
 }
    $.post(url,async(error, response, data) =>{
