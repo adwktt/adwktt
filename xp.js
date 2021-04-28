@@ -165,7 +165,6 @@ if($request&&($request.url.indexOf("login_by_wx.json")>=0||$request.url.indexOf(
      $.msg($.name,"獲取HeaderVal成功")
    }
 
-/*
 if($request&&($request.url.indexOf("login_by_wx.json")>=0||$request.url.indexOf("app_register_by_phone")>=0)) {
      const refreshToken = $response.body.match(/refreshToken":"(\w+)","refreshExpiration/)[1]
    if(refreshToken)$.setdata(refreshToken,`xp_rtk${$.idx}`)
@@ -173,7 +172,7 @@ if($request&&($request.url.indexOf("login_by_wx.json")>=0||$request.url.indexOf(
      $.msg($.name,"獲取refreshToken成功")
 
    }
-*/
+
  }
 
 
